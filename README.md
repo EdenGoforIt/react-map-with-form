@@ -1,75 +1,92 @@
-# React + TypeScript + Vite
+# React Map with Form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that allows users to select locations on an interactive map and capture address details through reverse geocoding.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Dual Map Provider Support**
+  - OpenStreetMap (Leaflet) - Free, no API key required
+  - Google Maps - Requires API key
 
-## React Compiler
+- **Location Selection**
+  - Click anywhere on the map to select a location
+  - Search for addresses (OpenStreetMap provider)
+  - Automatic marker placement
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Reverse Geocoding**
+  - Automatically fetches address details when a location is selected
+  - Displays full address, city/town, and suburb
+  - Shows coordinates (latitude/longitude)
 
-Note: This will impact Vite dev & build performances.
+- **Form Features**
+  - Clear button to reset selection
+  - Submit button to log data to console
+  - Live JSON preview with syntax highlighting
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Leaflet (OpenStreetMap)
+- @vis.gl/react-google-maps (Google Maps)
+- react-syntax-highlighter
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+```
+
+Note: Google Maps API key is optional. The app defaults to OpenStreetMap which requires no API key.
+
+## Usage
+
+1. Select a map provider from the dropdown (OpenStreetMap is default)
+2. Click anywhere on the map to select a location
+3. The form will automatically populate with:
+   - Full address
+   - City/Town
+   - Suburb (if available)
+   - Latitude and Longitude
+4. View the JSON data preview at the bottom
+5. Click "Submit" to log data to console or "Clear" to reset
+
+## API Attribution
+
+- OpenStreetMap data is provided by [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
+- Geocoding powered by [Nominatim](https://nominatim.openstreetmap.org/)

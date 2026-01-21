@@ -20,6 +20,7 @@ const App: React.FC = () => {
     useState<LocationDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // TODO: For google map we don't need to do that, there should be map click event
   const reverseGeocode = useCallback(
     async (coords: Coordinates): Promise<LocationDetails | null> => {
       if (mapProvider === "google" && mapApiKey) {
@@ -34,7 +35,7 @@ const App: React.FC = () => {
 
           const getComponent = (types: string[]) =>
             components.find((c: { types: string[] }) =>
-              types.some((t) => c.types.includes(t))
+              types.some((t) => c.types.includes(t)),
             )?.long_name || "";
 
           return {
@@ -45,9 +46,10 @@ const App: React.FC = () => {
         }
       } else {
         // Nominatim (OpenStreetMap) reverse geocoding
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}&addressdetails=1`;
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}&addressdetails=1&zoom=18`;
         const response = await fetch(url);
         const data = await response.json();
+        console.log("🚀 ~ App ~ data:", data);
 
         if (data && data.address) {
           const addr = data.address;
@@ -55,13 +57,19 @@ const App: React.FC = () => {
             address: data.display_name || "",
             suburb: addr.suburb || addr.neighbourhood || addr.hamlet || "",
             city:
-              addr.city || addr.town || addr.village || addr.municipality || "",
+              addr.city ||
+              addr.town ||
+              addr.village ||
+              addr.municipality ||
+              addr.county ||
+              addr.state ||
+              "",
           };
         }
       }
       return null;
     },
-    [mapProvider, mapApiKey]
+    [mapProvider, mapApiKey],
   );
 
   const handleMapClick = useCallback(
@@ -71,6 +79,7 @@ const App: React.FC = () => {
       setLocationDetails(null);
 
       try {
+        // For Google, we don't need to do that because they will provide much more callbacks with details
         const details = await reverseGeocode(coords);
         setLocationDetails(details);
       } catch (error) {
@@ -79,8 +88,14 @@ const App: React.FC = () => {
         setIsLoading(false);
       }
     },
-    [reverseGeocode]
+    [reverseGeocode],
   );
+
+  const handleClear = useCallback(() => {
+    setCoordinates(null);
+    setLocationDetails(null);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row h-screen w-full bg-gray-100">
       {/* Left Panel: Form & Info */}
@@ -93,6 +108,7 @@ const App: React.FC = () => {
           mapApiKey={mapApiKey}
           setMapApiKey={setMapApiKey}
           isLoading={isLoading}
+          onClear={handleClear}
         />
       </div>
 
